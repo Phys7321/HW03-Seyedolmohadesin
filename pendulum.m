@@ -78,18 +78,18 @@ if grph % Plot Solutions of exact and small angle
     f3=figure ('Name', 'Velocity and Position');
     
     subplot(2,1,1)
-    plot(t,R .* w(:,2),'c-')
-    title('Velocity vs. Time ')
+    plot(t, w(:,2),'c-')
+    title('$\dot{\theta (t)}, \theta _0=0.1$ ', 'Interpreter','latex')
     xlabel('t')
-    ylabel( 'Velocity')
+    ylabel('$\dot{\theta}$', 'Interpreter','latex')
     
     subplot(2,1,2)
     plot(t, w(:,1),'m-')
-    title('Angle vs. Time ')
+    title('\theta (t) ')
     xlabel('t')
-    ylabel( 'Angle')
+    ylabel( '\theta')
     
-    f4=figure('Name', 'Phase Space')
+    f4 =figure('Name', 'Phase Space');
     
     plot(w(:,1),w(:,2));
     title('Phase Space ')
