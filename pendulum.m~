@@ -62,7 +62,7 @@ if grph % Plot Solutions of exact and small angle
     xlabel('t')
     ylabel( '\Delta\phi')
     
-    f2=figure;
+    f2=figure ('Name', 'energy');
     
     subplot(2,1,1)
     plot(t(ind(1):ind(3)),deltaE,'m:')
@@ -75,26 +75,26 @@ if grph % Plot Solutions of exact and small angle
     legend('Kinetic Energy','Potential Energy')
     xlabel('t')
     
-    f3=figure;
+    f3=figure ('Name', 'Velocity and Position');
     
-    subplot(4,2,4)
-    plot(t,R .* w(:,2),'c-')
-    title('Velocity vs. Time ')
+    subplot(2,1,1)
+    plot(t, w(:,2),'c-')
+    title('$\dot{\theta (t)}$ ', 'Interpreter','latex')
     xlabel('t')
-    ylabel( 'Velocity')
+    ylabel('$\dot{\theta}$', 'Interpreter','latex')
     
-    subplot(4,2,4)
+    subplot(2,1,2)
     plot(t, w(:,1),'m-')
-    title('Angle vs. Time ')
+    title('\theta (t) ')
     xlabel('t')
-    ylabel( 'Angle')
+    ylabel( '\theta')
     
-    f4=figure
+    f4 =figure('Name', 'Phase Space');
     
     plot(w(:,1),w(:,2));
     title('Phase Space ')
+    ylabel('$\dot{\theta}$', 'Interpreter','latex')
     xlabel('\theta')
-    ylabel( 'Angle')
 end
 end
 %-------------------------------------------

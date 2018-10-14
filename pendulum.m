@@ -79,7 +79,7 @@ if grph % Plot Solutions of exact and small angle
     
     subplot(2,1,1)
     plot(t, w(:,2),'c-')
-    title('$\dot{\theta (t)}, \theta _0=0.1$ ', 'Interpreter','latex')
+    title('$\dot{\theta (t)}$ ', 'Interpreter','latex')
     xlabel('t')
     ylabel('$\dot{\theta}$', 'Interpreter','latex')
     
