@@ -1,7 +1,8 @@
-function [period,sol] = damped_pendulum(R,theta0,thetad0,grph,gamma) 
+function [period,sol] = forced_pendulum(R,theta0,thetad0,grph,gamma,freq) 
 %Modify: Finds the period of a nonlinear pendulum given the length of the pendulum
 % arm and initial conditions. All angles in radians.
 % gamma is damping coefficient
+%freq is the angular frequency of the external force
 %Setting initial conditions
 if nargin==0
     error('Must input length and initial conditions')
@@ -22,23 +23,30 @@ g=9.81;
 omega = sqrt(g/R);
 T= 2*pi/omega;
 % number of oscillations to graph
-N = 10;
+N = 20;
 
 
 
 
 tspan = [0 N*T];
-%opts = odeset('events',@events,'refine',6); %Here for future event finder
-opts = odeset('refine',6);
+if gamma >= 5
+    
+    opts = odeset('events',@events,'refine',6); % stops at equilibrium
+else 
+
+    opts = odeset('refine',6);
+end    
 r0 = [theta0 thetad0];
-[t,w] = ode45(@(t,w) proj(t,w,g,R,gamma),tspan,r0,opts);
+[t,w] = ode45(@(t,w) proj(t,w,g,R,gamma,freq),tspan,r0,opts);
 sol = [t,w];
 ind= find(w(:,2).*circshift(w(:,2), [-1 0]) <= 0);
 
-if ind > 2 % condition for oscillatory motion
+period=0;
+if length(ind) > 2 % condition for oscillatory motion
     
     
     ind = chop(ind,4);
+    ind = ind(end-5:end); % find the period of the steady part of the motion  
     period= 2*mean(diff(t(ind)));
  
     E0 = 0.5 .* R.^2 .* thetad0 .^2 + g .* R .* (1-cos(theta0));  % Initial energy of the pendulum
@@ -55,7 +63,8 @@ y = theta0*sin(omega*t+delta);
 
 if grph % Plot Solutions of exact and small angle
     
-    if ind > 3
+  %{
+  if length(ind) > 3
         
         f2=figure ('Name', 'energy');
     
@@ -70,19 +79,23 @@ if grph % Plot Solutions of exact and small angle
         legend('Kinetic Energy','Potential Energy')
         xlabel('t')
     end
+    
+    %}
     f3=figure ('Name', 'Velocity and Position');
     
-    subplot(2,1,1)
-    plot(t, w(:,2),'c-')
-    title('$\dot{\theta (t)}$ ', 'Interpreter','latex')
-    xlabel('t')
-    ylabel('$\dot{\theta}$', 'Interpreter','latex')
+   
     
-    subplot(2,1,2)
+    subplot(2,1,1)
     plot(t, w(:,1),'m-')
     title('\theta (t) ')
     xlabel('t')
     ylabel( '\theta')
+    
+     subplot(2,1,2)
+    plot(t, w(:,2),'c-')
+    title('$\dot{\theta (t)}$ ', 'Interpreter','latex')
+    xlabel('t')
+    ylabel('$\dot{\theta}$', 'Interpreter','latex')
     
     f4 =figure('Name', 'Phase Space');
     
@@ -94,8 +107,8 @@ end
 end
 %-------------------------------------------
 %
-function rdot = proj(t,r,g,R,gamma)
-    rdot = [r(2); (-g/R*sin(r(1)) - gamma .* r(2))];
+function rdot = proj(t,r,g,R,gamma,freq)
+    rdot = [r(2); (-g/R*sin(r(1)) - (gamma .* r(2))+cos(freq .* t))];
 end
 
 %-------------------------------------------
